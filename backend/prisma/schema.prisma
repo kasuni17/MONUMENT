@@ -1,0 +1,164 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// SQLite has no native enum support; these fields are validated at the
+// application layer (Zod schemas) and documented here for reference:
+// Role: ADMIN | EDITOR | READER
+// ArticleStatus: DRAFT | PUBLISHED | SCHEDULED | ARCHIVED
+// CommentStatus: PENDING | APPROVED | REJECTED
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         String   @default("READER")
+  avatar       String?
+  bio          String?
+  createdAt    DateTime @default(now())
+
+  bookmarks Bookmark[]
+  comments  Comment[]
+  media     Media[]
+  author    Author?
+}
+
+model Author {
+  id           String  @id @default(cuid())
+  name         String
+  slug         String  @unique
+  bio          String?
+  avatar       String?
+  socialLinks  String? // JSON string: { twitter, linkedin, website }
+  userId       String? @unique
+  user         User?   @relation(fields: [userId], references: [id])
+  createdAt    DateTime @default(now())
+
+  articles Article[]
+}
+
+model Category {
+  id          String  @id @default(cuid())
+  name        String
+  slug        String  @unique
+  description String?
+  coverImage  String?
+
+  articles Article[]
+}
+
+model Tag {
+  id   String @id @default(cuid())
+  name String
+  slug String @unique
+
+  articles Article[] @relation("ArticleTags")
+}
+
+model Collection {
+  id          String  @id @default(cuid())
+  title       String
+  slug        String  @unique
+  description String?
+  coverImage  String?
+  createdAt   DateTime @default(now())
+
+  articles Article[] @relation("CollectionArticles")
+}
+
+model Article {
+  id               String        @id @default(cuid())
+  title            String
+  slug             String        @unique
+  subtitle         String?
+  excerpt          String
+  content          String
+  coverImage       String
+  coverImageAlt    String?
+  categoryId       String
+  category         Category      @relation(fields: [categoryId], references: [id])
+  authorId         String
+  author           Author        @relation(fields: [authorId], references: [id])
+  status           String        @default("DRAFT")
+  publishedAt      DateTime?
+  readingTimeMin    Int          @default(4)
+  seoTitle         String?
+  seoDescription   String?
+  views            Int           @default(0)
+  featured         Boolean       @default(false)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  tags        Tag[]        @relation("ArticleTags")
+  collections Collection[] @relation("CollectionArticles")
+  bookmarks   Bookmark[]
+  comments    Comment[]
+  articleViews ArticleView[]
+
+  @@index([slug])
+  @@index([status])
+  @@index([publishedAt])
+}
+
+model Bookmark {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  articleId String
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, articleId])
+}
+
+model Comment {
+  id        String        @id @default(cuid())
+  articleId String
+  article   Article       @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  body      String
+  status    String   @default("PENDING")
+  createdAt DateTime @default(now())
+
+  @@index([status])
+}
+
+model Media {
+  id             String   @id @default(cuid())
+  filename       String
+  url            String
+  mimeType       String
+  size           Int
+  width          Int?
+  height         Int?
+  uploadedById   String
+  uploadedBy     User     @relation(fields: [uploadedById], references: [id])
+  createdAt      DateTime @default(now())
+}
+
+model ArticleView {
+  id        String   @id @default(cuid())
+  articleId String
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}
+
+model NewsletterSubscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+}
+
+model Setting {
+  key   String @id
+  value String
+}

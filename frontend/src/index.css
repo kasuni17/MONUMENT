@@ -1,0 +1,132 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-ivory text-ink dark:bg-dark-bg dark:text-dark-ink font-sans antialiased;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+::selection {
+  @apply bg-accent/20;
+}
+
+.kicker {
+  @apply font-sans text-[11px] font-semibold uppercase tracking-widest2 text-accent dark:text-dark-accent;
+}
+
+.hairline {
+  @apply border-hairline dark:border-dark-hairline;
+}
+
+/* Reading-mode aware article body */
+[data-reading-theme="sepia"] .reading-surface {
+  background-color: #f1e7d0;
+  color: #3a2e1e;
+}
+[data-reading-theme="dark"] .reading-surface {
+  background-color: #15130f;
+  color: #ede7db;
+}
+
+/* Article prose */
+.article-prose {
+  font-family: "Fraunces", Georgia, serif;
+}
+.article-prose > p:first-of-type::first-letter {
+  float: left;
+  font-size: 4.2em;
+  line-height: 0.85;
+  padding-right: 0.09em;
+  padding-top: 0.03em;
+  font-weight: 600;
+  color: theme("colors.accent.DEFAULT");
+}
+.article-prose h2 {
+  @apply font-serif text-[1.7em] font-medium mt-12 mb-4 leading-tight;
+  scroll-margin-top: 6rem;
+}
+.article-prose h3 {
+  @apply font-serif text-[1.3em] font-medium mt-9 mb-3 leading-tight;
+  scroll-margin-top: 6rem;
+}
+.article-prose p {
+  @apply mb-6;
+}
+.article-prose a {
+  @apply text-accent dark:text-dark-accent underline underline-offset-2 decoration-accent/40 hover:decoration-accent;
+}
+.article-prose blockquote {
+  @apply border-l-2 border-accent pl-6 my-8 font-serif italic text-[1.15em] text-ink-soft dark:text-dark-ink/80;
+}
+.article-prose ul,
+.article-prose ol {
+  @apply mb-6 pl-6 space-y-2;
+}
+.article-prose ul {
+  @apply list-disc;
+}
+.article-prose ol {
+  @apply list-decimal;
+}
+.article-prose img {
+  @apply w-full h-auto my-8 object-cover;
+}
+.article-prose figure {
+  @apply my-8;
+}
+.article-prose figcaption {
+  @apply font-sans text-sm text-ink-soft dark:text-dark-ink/60 mt-2 text-center;
+}
+.article-prose pre {
+  @apply bg-ink text-ivory dark:bg-black/40 font-mono text-[0.85em] p-5 my-8 overflow-x-auto rounded-none leading-relaxed;
+}
+.article-prose code {
+  @apply font-mono text-[0.9em] bg-hairline/50 dark:bg-dark-hairline/50 px-1.5 py-0.5;
+}
+.article-prose pre code {
+  @apply bg-transparent p-0;
+}
+.article-prose hr {
+  @apply my-12 border-hairline dark:border-dark-hairline;
+}
+.article-prose div[data-type="callout"] {
+  @apply border-l-2 border-accent bg-accent/5 dark:bg-accent/10 px-6 py-5 my-8 font-sans text-[0.95em] not-italic;
+}
+.article-prose table {
+  @apply w-full my-8 border-collapse text-sm font-sans;
+}
+.article-prose th,
+.article-prose td {
+  @apply border border-hairline dark:border-dark-hairline px-3 py-2 text-left;
+}
+.article-prose iframe {
+  @apply w-full aspect-video my-8;
+}
+
+/* Reduce motion on small screens automatically */
+@media (max-width: 767px) {
+  .desktop-only-motion {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
