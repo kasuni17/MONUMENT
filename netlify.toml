@@ -16,8 +16,7 @@
     "jsdom"
   ]
   included_files = [
-    "node_modules/.prisma/client/**",
-    "node_modules/jsdom/lib/jsdom/browser/default-stylesheet.css"
+    "node_modules/.prisma/client/**"
   ]
 
 [[redirects]]
