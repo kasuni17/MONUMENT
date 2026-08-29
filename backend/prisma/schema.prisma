@@ -1,14 +1,17 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-1.0.x", "rhel-openssl-3.0.x"]
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
-// SQLite has no native enum support; these fields are validated at the
-// application layer (Zod schemas) and documented here for reference:
+// These fields are validated at the application layer (Zod schemas) and
+// documented here for reference, kept as plain strings rather than native
+// enums to preserve the existing application behavior:
 // Role: ADMIN | EDITOR | READER
 // ArticleStatus: DRAFT | PUBLISHED | SCHEDULED | ARCHIVED
 // CommentStatus: PENDING | APPROVED | REJECTED

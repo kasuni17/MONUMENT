@@ -61,10 +61,10 @@ router.get("/", optionalAuth, async (req, res) => {
   if (featured === "true") where.featured = true;
   if (q) {
     where.OR = [
-      { title: { contains: q } },
-      { excerpt: { contains: q } },
-      { subtitle: { contains: q } },
-      { content: { contains: q } },
+      { title: { contains: q, mode: "insensitive" } },
+      { excerpt: { contains: q, mode: "insensitive" } },
+      { subtitle: { contains: q, mode: "insensitive" } },
+      { content: { contains: q, mode: "insensitive" } },
     ];
   }
 

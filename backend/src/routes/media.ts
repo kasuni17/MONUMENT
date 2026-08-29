@@ -8,7 +8,10 @@ import { requireRole } from "../middleware/auth";
 
 const router = Router();
 
-const uploadsDir = path.join(__dirname, "..", "..", "uploads");
+// On Netlify Functions the deployment bundle is read-only, so uploads
+// must be written to /tmp instead. Files written there do not persist
+// across cold starts or separate function instances — see deployment notes.
+const uploadsDir = process.env.NETLIFY ? "/tmp/uploads" : path.join(__dirname, "..", "..", "uploads");
 if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
 
 const storage = multer.diskStorage({

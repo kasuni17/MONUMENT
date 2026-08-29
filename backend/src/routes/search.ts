@@ -10,12 +10,12 @@ router.get("/", async (req, res) => {
   const where: any = {
     status: "PUBLISHED",
     OR: [
-      { title: { contains: q } },
-      { excerpt: { contains: q } },
-      { content: { contains: q } },
-      { tags: { some: { name: { contains: q } } } },
-      { author: { name: { contains: q } } },
-      { category: { name: { contains: q } } },
+      { title: { contains: q, mode: "insensitive" } },
+      { excerpt: { contains: q, mode: "insensitive" } },
+      { content: { contains: q, mode: "insensitive" } },
+      { tags: { some: { name: { contains: q, mode: "insensitive" } } } },
+      { author: { name: { contains: q, mode: "insensitive" } } },
+      { category: { name: { contains: q, mode: "insensitive" } } },
     ],
   };
   if (category) where.category = { slug: category };
