@@ -56,10 +56,8 @@ app.use(
 );
 app.use(express.json({ limit: "2mb" }));
 app.use(cookieParser());
-const uploadsStaticDir =
-  process.env.NODE_ENV === "production"
-    ? "/tmp/uploads"
-    : path.join(__dirname, "..", "uploads");
+const isNetlify = process.env.NETLIFY === "true" || process.env.NETLIFY === "1";
+const uploadsStaticDir = isNetlify ? "/tmp/uploads" : path.join(__dirname, "..", "uploads");
 
 app.use("/uploads", express.static(uploadsStaticDir));
 
