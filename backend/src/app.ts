@@ -1,3 +1,12 @@
+// Express 4 does not forward a rejected promise from an async route handler
+// to its error middleware, so an unhandled DB/other error inside any async
+// route (e.g. a transient Prisma error) becomes an unhandled promise
+// rejection. Node 20's default unhandledRejections=throw then kills the
+// whole process instead of returning a 500 — exactly what a Lambda-based
+// Netlify Function reports as a bare "exit status 1" with no stack trace.
+// This patches Express's router so async rejections reach the existing
+// error-handling middleware below, with no changes to any route file.
+import "express-async-errors";
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
