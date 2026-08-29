@@ -56,8 +56,13 @@ app.use(
 );
 app.use(express.json({ limit: "2mb" }));
 app.use(cookieParser());
-const uploadsStaticDir = process.env.NETLIFY ? "/tmp/uploads" : path.join(__dirname, "..", "uploads");
+const uploadsStaticDir =
+  process.env.NODE_ENV === "production"
+    ? "/tmp/uploads"
+    : path.join(__dirname, "..", "uploads");
+
 app.use("/uploads", express.static(uploadsStaticDir));
+
 
 const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 50, standardHeaders: true, legacyHeaders: false });
 
