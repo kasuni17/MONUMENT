@@ -5,17 +5,19 @@
 [build.environment]
   NODE_ENV = "production"
   NETLIFY = "true"
-  # NODE_ENV=production makes npm's implicit install step skip devDependencies
-  # (typescript, vite, etc.), which is what caused "tsc: not found". This
-  # forces devDependencies to install regardless of NODE_ENV.
   NPM_FLAGS = "--include=dev"
 
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
-  external_node_modules = ["@prisma/client", ".prisma/client"]
+  external_node_modules = [
+    "@prisma/client",
+    ".prisma/client",
+    "jsdom"
+  ]
   included_files = [
     "node_modules/.prisma/client/**",
+    "node_modules/jsdom/browser/default-stylesheet.css"
   ]
 
 [[redirects]]
